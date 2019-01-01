@@ -6,4 +6,4 @@ todo: i will build a website blog to show these contents.
 
 ## blog
 
-- cka [考试分享](./blog/cka%20考试资料梳理)
+- cka [考试分享](./blog/cka%20考试资料梳理/cka%20考试资料梳理.md)
