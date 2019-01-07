@@ -82,10 +82,6 @@ EOF
     systemctl disable firewalld && systemctl stop firewalld
 }
 
-install_cni_centos() {
-    
-
-}
 
 setup_master() {
 	kubeadm init --pod-network-cidr $MASTER_CIDR --ignore-preflight-errors=all
@@ -98,9 +94,9 @@ setup_master() {
     until kubectl get nodes &> /dev/null; do echo "Waiting kubernetes api server for a second..."; sleep 1; done
     # Enable master node scheduling
     # kubectl taint nodes --all  node-role.kubernetes.io/master-
-    if $INSTALL_FLANNEL; then
-        install_flannel
-    fi
+    
+    install_flannel
+    
 }
 
 # Install flannel for the cluster
