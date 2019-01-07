@@ -20,6 +20,25 @@ case $input in
 esac
 echo "MASTER_NODE:"$MASTER_NODE
 
+
+echo "----------------------------------"
+echo "Can it access google images?"
+echo "(Y/y) Y"
+echo "(N/n) N"
+echo "(0) exit"
+echo "----------------------------------"
+read input
+
+case $input in
+    Y | y )
+    IS_ACCESS_GOOGLE="true";;
+    N | n)
+    IS_ACCESS_GOOGLE="false";;
+    0)
+    exit;;
+esac
+echo "IS_ACCESS_GOOGLE:"$IS_ACCESS_GOOGLE
+
 MASTER_CIDR="10.244.0.0/16"
 
 uninstall_docker_centos() {
@@ -82,8 +101,47 @@ EOF
     systemctl disable firewalld && systemctl stop firewalld
 }
 
+images_tag() {
+    image_pull = (
+        "junjunli/kube-proxy:v1.13.1"
+        "junjunli/coredns:1.2.6"
+        "junjunli/pause:3.1"
+
+        "junjunli/kube-scheduler:v1.13.1"
+        "junjunli/kube-apiserver:v1.13.1"
+        "junjunli/kube-controller-manager:v1.13.1"
+        "junjunli/etcd:3.2.24"
+        "junjunli/flannel:v0.10.0-amd64"
+    )
+    image_tag = (
+        "k8s.gcr.io/kube-proxy:v1.13.1"
+        "k8s.gcr.io/coredns:1.2.6"
+        "k8s.gcr.io/pause:3.1"
+
+        "k8s.gcr.io/kube-scheduler:v1.13.1"
+        "k8s.gcr.io/kube-apiserver/:v1.13.1"
+        "k8s.gcr.io/kube-controller-manager:v1.13.1"
+        "k8s.gcr.io/etcd:3.2.24"
+        "quay.io/coreos/flannel:v0.10.0-amd64"
+    )
+    
+    if $MASTER_NODE; then
+        end=${#image_pull[*]}
+    else
+        end=3
+    fi
+
+    for((i=0; i<$end; i++));
+    do
+       docker pull ${image_pull[$i]}
+       docker tag ${image_pull[$i]} ${image_tag[$i]}
+       docker rmi ${image_pull[$i]}
+    done
+}
+
 
 setup_master() {
+
 	kubeadm init --pod-network-cidr $MASTER_CIDR --ignore-preflight-errors=all
 
     # Config default kubeconfig for kubectl
@@ -93,7 +151,13 @@ setup_master() {
 
     until kubectl get nodes &> /dev/null; do echo "Waiting kubernetes api server for a second..."; sleep 1; done
     # Enable master node scheduling
-    # kubectl taint nodes --all  node-role.kubernetes.io/master-
+
+    echo "(Y/y) Y"
+echo "(N/n) N"
+echo "(0) exit"
+echo "----------------------------------"
+read input
+    kubectl taint nodes --all  node-role.kubernetes.io/master-
     
     install_flannel
     
@@ -108,6 +172,10 @@ install_flannel(){
 install_docker_centos
 install_kube_centos
 k8s_config
+
+if( ! $IS_ACCESS_GOOGLE); then
+   image_tag
+fi
 
 if $MASTER_NODE; then
     setup_master
