@@ -129,7 +129,7 @@ images_tag() {
         "junjunli/etcd:3.2.24"
         "junjunli/flannel:v0.10.0-amd64"
     )
-    image_tag=s(
+    image_tag=(
         "k8s.gcr.io/kube-proxy:v1.13.1"
         "k8s.gcr.io/coredns:1.2.6"
         "k8s.gcr.io/pause:3.1"
