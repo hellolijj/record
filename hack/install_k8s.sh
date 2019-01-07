@@ -3,17 +3,13 @@ set -o nounset
 
 echo "----------------------------------"
 echo "Now install kubernetes version v1.12"
-echo "----------------------------------"
-
-esac
-
-echo "----------------------------------"
 echo "Is it the master node ?"
 echo "(Y/y) Y"
 echo "(N/n) N"
 echo "(0) exit"
 echo "----------------------------------"
 read input
+
 case $input in
     Y | y )
     MASTER_NODE="true";;
