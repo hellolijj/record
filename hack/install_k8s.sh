@@ -102,7 +102,7 @@ EOF
 }
 
 images_tag() {
-    image_pull = (
+    image_pull=(
         "junjunli/kube-proxy:v1.13.1"
         "junjunli/coredns:1.2.6"
         "junjunli/pause:3.1"
@@ -113,7 +113,7 @@ images_tag() {
         "junjunli/etcd:3.2.24"
         "junjunli/flannel:v0.10.0-amd64"
     )
-    image_tag = (
+    image_tag=s(
         "k8s.gcr.io/kube-proxy:v1.13.1"
         "k8s.gcr.io/coredns:1.2.6"
         "k8s.gcr.io/pause:3.1"
