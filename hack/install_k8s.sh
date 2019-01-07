@@ -70,8 +70,10 @@ install_docker_centos() {
 }
 
 install_kube_centos() {
-	
-    cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+
+    if( $IS_ACCESS_GOOGLE); then
+
+        cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
 baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
@@ -82,9 +84,23 @@ gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cl
 exclude=kube*
 EOF
 
+    else
+
+        cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=0
+repo_gpgcheck=0
+gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg
+http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+EOF
+    fi
+
     # Set SELinux in permissive mode (effectively disabling it)
-    setenforce 0
-    sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+    # setenforce 0
+    # sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
     yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes 
     systemctl enable kubelet && systemctl start kubelet
