@@ -168,7 +168,7 @@ setup_master() {
     until kubectl get nodes &> /dev/null; do echo "Waiting kubernetes api server for a second..."; sleep 1; done
     # Enable master node scheduling
 
-    # kubectl taint nodes --all  node-role.kubernetes.io/master-
+    kubectl taint nodes --all  node-role.kubernetes.io/master-
     
     install_flannel
     
