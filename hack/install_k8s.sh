@@ -135,7 +135,7 @@ images_tag() {
         "k8s.gcr.io/pause:3.1"
 
         "k8s.gcr.io/kube-scheduler:v1.13.1"
-        "k8s.gcr.io/kube-apiserver/:v1.13.1"
+        "k8s.gcr.io/kube-apiserver:v1.13.1"
         "k8s.gcr.io/kube-controller-manager:v1.13.1"
         "k8s.gcr.io/etcd:3.2.24"
         "quay.io/coreos/flannel:v0.10.0-amd64"
@@ -168,12 +168,7 @@ setup_master() {
     until kubectl get nodes &> /dev/null; do echo "Waiting kubernetes api server for a second..."; sleep 1; done
     # Enable master node scheduling
 
-    echo "(Y/y) Y"
-echo "(N/n) N"
-echo "(0) exit"
-echo "----------------------------------"
-read input
-    kubectl taint nodes --all  node-role.kubernetes.io/master-
+    # kubectl taint nodes --all  node-role.kubernetes.io/master-
     
     install_flannel
     
@@ -190,7 +185,7 @@ install_kube_centos
 k8s_config
 
 if( ! $IS_ACCESS_GOOGLE); then
-   image_tag
+   images_tag
 fi
 
 if $MASTER_NODE; then
