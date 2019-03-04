@@ -98,8 +98,9 @@ http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
 EOF
     fi
 
+    # 使用setenforce 0 的原因是在kubelet操作docker的时候存在一个权限的问题
     # Set SELinux in permissive mode (effectively disabling it)
-    # setenforce 0
+    setenforce 0
     # sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
     yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes 
