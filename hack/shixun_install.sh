@@ -141,7 +141,8 @@ EOF
     fi
 
     # Set SELinux in permissive mode (effectively disabling it)
-    # setenforce 0
+    setenforce 0
+    echo 1 > /proc/sys/net/ipv4/ip_forward
     # sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
     yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes 
