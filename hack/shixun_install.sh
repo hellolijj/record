@@ -201,7 +201,7 @@ images_tag() {
 
 setup_master() {
 
-	if [ "$Cri"=="docker" ]; then
+	if [ "$Cri" == "docker" ]; then
         kubeadm init --pod-network-cidr $MASTER_CIDR --ignore-preflight-errors=all
     else
         kubeadm init --pod-network-cidr $MASTER_CIDR --ignore-preflight-errors=all --cri-socket=/var/run/pouchcri.sock
@@ -235,7 +235,7 @@ install_kube_centos
 install_pouch
 config_pouch
 
-if [ "$Cri"=="pouch" ]; then
+if [ "$Cri" == "pouch" ]; then
     config_pouch_kubelet
 fi
     
