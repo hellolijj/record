@@ -83,7 +83,7 @@ metadata:
     app: vistio-web
     release: vistio
 spec:
-  type: 
+  type: NodePort
   selector:
     app: vistio-web
     release: vistio
@@ -92,6 +92,7 @@ spec:
       port: 8080
       targetPort: 8080
       protocol: TCP
+      nodePort: 30002
 
 ---
 # Source: vistio/templates/deployment.yaml
