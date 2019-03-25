@@ -1,0 +1,61 @@
+set -o errexit
+set -o nounset
+
+echo "----------------------------------"
+echo "Now input node ip"
+echo "(2) node2"
+echo "(0) exit"
+echo "----------------------------------"
+read input
+
+case $input in
+    2)
+    node="node2";;
+    4)
+    node="node4";;
+    0)
+    exit;;
+esac
+
+echo "----------------------------------"
+echo "Now change cri?"
+echo "(Y/y) Y => docker"
+echo "(N/n) N => pouch"
+echo "(0) exit"
+echo "----------------------------------"
+read input
+
+case $input in
+    Y | y )
+    Cri="docker";;
+    N | n)
+    Cri="pouch";;
+    0)
+    exit;;
+esac
+echo "change node 【"$node"】 Cri to be 【"$Cri"】"
+
+# todo 对cri 合法性判断
+
+# 加入指令
+join_command=`kubeadm token create --print-join-command`
+
+ssh $node > /dev/null 2>&1 << eeooff
+
+# 关闭cri
+if [ "$Cri" == "docker" ]; then
+    kubeadm reset -f --cri-socket=/var/run/pouchcri.sock
+else
+    kubeadm reset -f 
+fi
+
+# 启动
+
+if [ "$Cri" == "docker" ]; then
+    $join_command
+else
+    $join_command --cri-socket=/var/run/pouchcri.sock
+fi  
+
+exit
+eeooff
