@@ -18,7 +18,7 @@ case $input in
     0)
     exit;;
 esac
-echo "change node 【"$node"】 Cri to be 【"$Cri"】"
+echo "node Cri will be 【"$Cri"】"
 
 MASTER_CIDR="10.244.0.0/16"
 
