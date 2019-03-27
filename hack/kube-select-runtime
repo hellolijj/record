@@ -5,6 +5,7 @@ set -o nounset
 echo "----------------------------------"
 echo "Now input node ip"
 echo "(2) node2"
+echo "(4) node2"
 echo "(0) exit"
 echo "----------------------------------"
 read input

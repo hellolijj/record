@@ -22,10 +22,23 @@ echo "change node 【"$node"】 Cri to be 【"$Cri"】"
 
 MASTER_CIDR="10.244.0.0/16"
 
+
+
 start_master() {
+
+    echo 1 >> /proc/sys/net/ipv4/ip_forward
+    systemctl disable firewalld && systemctl stop firwalld
+    setenforce 0
+    swapoff -a
+
+    
 	if [ "$Cri" == "docker" ]; then
+        kubeadm reset -f
+        iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X
         kubeadm init --pod-network-cidr $MASTER_CIDR --ignore-preflight-errors=all
     else
+        kubeadm reset -f --cri-socket=/var/run/pouchcri.sock
+        iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X
         kubeadm init --pod-network-cidr $MASTER_CIDR --ignore-preflight-errors=all --cri-socket=/var/run/pouchcri.sock
     fi
     
@@ -53,3 +66,7 @@ install_dashboard() {
 start_master
 install_flannel
 install_dashboard
+
+
+
+
