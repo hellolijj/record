@@ -10,9 +10,17 @@ echo "(0) exit"
 echo "----------------------------------"
 read input
 
+case $input in
+    Y | y )
+    Cri="docker";;
+    N | n)
+    Cri="pouch";;
+    0)
+    exit;;
+esac
+echo "change node 【"$node"】 Cri to be 【"$Cri"】"
 
 MASTER_CIDR="10.244.0.0/16"
-
 
 start_master() {
 	if [ "$Cri" == "docker" ]; then
