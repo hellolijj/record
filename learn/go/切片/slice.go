@@ -2,13 +2,16 @@ package main
 
 import "fmt"
 
+func reverse(s []int) {
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
+}
+
 func main() {
 
 	sl := []int{1,2,3,4,5}
-	//append(sl, 3)
-	fmt.Printf("%V ", sl)
-	for _, v := range sl{
-		fmt.Println(v)
-	}
+	reverse(sl)
+	fmt.Println(sl)
 
 }
