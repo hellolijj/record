@@ -55,9 +55,41 @@
 
 ## Design
 
-### Synopsis
+According the [enhancement](https://github.com/kubernetes/enhancements/blob/master/keps/sig-node/0035-20190130-topology-manager.md#proposal) of *Node Topology Manager*, there are two methods to realize. One is to redefine interface of *topology manager* and make a new component. Other is to improve on current Kubernetes topology manager.
 
-todo
+here are design about improvement on topology manager:
+
+- Kubelet consults Topology Manager for pod admission.
+
+![](https://user-images.githubusercontent.com/379372/47447526-945a7580-d772-11e8-9761-5213d745e852.png)
+
+*Figure: Topology Manager instantiation and inclusion in pod admit lifecycle.*
+
+- Add two implementations of Topology Manager interface and a feature gate.
+  - As much Topology Manager functionality as possible is stubbed when the feature gate is disabled.
+
+  - Add a functional Topology Manager that queries hint providers in order to compute a preferred socket mask for each container.
+
+- Add`GetTopologyHints()`method to CPU Manager.
+
+- CPU Manager static policy calls`GetAffinity()`method of Topology Manager when deciding CPU affinity.
+
+- Add`GetTopologyHints()`method to Device Manager.
+
+  - Add Socket ID to Device structure in the device plugin interface. Plugins should be able to determine the socket when enumerating supported devices. See the protocol diff below.
+  - Device Manager calls`GetAffinity()`method of Topology Manager when deciding device allocation.
+
+
+
+*Listing: Amended device plugin gRPC protocol.*
+
+[![topology-manager-wiring](https://user-images.githubusercontent.com/379372/47447533-9a505680-d772-11e8-95ca-ef9a8290a46a.png)](https://user-images.githubusercontent.com/379372/47447533-9a505680-d772-11e8-95ca-ef9a8290a46a.png)
+
+*Figure: Topology Manager hint provider registration.*
+
+[![topology-manager-hints](https://user-images.githubusercontent.com/379372/47447543-a0463780-d772-11e8-8412-8bf4a0571513.png)](https://user-images.githubusercontent.com/379372/47447543-a0463780-d772-11e8-8412-8bf4a0571513.png)
+
+*Figure: Topology Manager fetches affinity from hint providers.*
 
 ## Schedule
 
@@ -142,3 +174,5 @@ I will be based in Zhejiang University during the summer And I will be available
 ### why i choose gsoc?
 
 I am an Open source lover, and GSoC provides me a chance to make contributions to open source projects with mentorship from great developers all over the world. I believe it is amazing and I definitely can learn quite a few cutting-edge techniques from that.
+
+
