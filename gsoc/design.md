@@ -26,7 +26,7 @@ const (
 ```
 
 使用的时候在原gpushare的基础上添加的字段上`aliyun.com/gpu-men` 、 `aliyun.com/gpu-count` 不添加新的字段。当使用多个gpu的时候、通过数组的形式传递每个gpu 的使用信息。
-如：调度分配给某个任务2个gpu，分别使用 2g、3g显存。
+如：调度分配给某个任务需要使用2个gpu，分别使用 2g、3g显存。
 ```
 apiVersion: apps/v1
 kind: Deployment
