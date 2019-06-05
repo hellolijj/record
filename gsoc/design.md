@@ -5,23 +5,26 @@
 如下:
 
 ```
-type DeviceNode struct {
-	devices []*pluginapi.Device
-    topology map[[2]Device] topologyType
+
+type NvidiaDevicePlugin struct {
+	devs         []*pluginapi.Device
+	realDevNames []string
+	devNameMap   map[string]uint
+	devIndxMap   map[uint]string
+	devTopology  map[string]map[string]topologyType
+	
+	socket       string
+	mps          bool
+	healthCheck  bool
+
+	stop   chan struct{}
+	health chan *pluginapi.Device
+
+	server *grpc.Server
+	sync.RWMutex
 }
 
-type topologyType string
-
-const (
-    topologyTypeX = "X"
-    topologyTypeSYS = "SYS"
-    topologyTypeNODE = "NODE"
-    topologyTypePHB = "PHB"
-    topologyTypePXB = "PXB"
-    topologyTypePIX = "PIX"
-    topologyTypeNV = "NV#"
-	
-)
+type topologyType nvml.P2PLinkType
 
 ```
 
@@ -53,3 +56,5 @@ spec:
             - aliyun.com/gpu-count: 2
             - aliyun.com/gpu-count: 3
 ```
+
+> gpu share 实际上跟nvidia 的gpu 个数没什么两样。
