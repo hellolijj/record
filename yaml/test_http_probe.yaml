@@ -1,0 +1,19 @@
+apiVersion: apps.kruise.io/v1alpha1
+kind: PodProbeMarker
+metadata:
+  name: test_http
+spec:
+  selector:
+    matchLabels:
+      run: nginx
+  labels:
+    mark: zk-master
+  markProbe:
+    httpGet:
+      path: /
+      port: 80
+      httpHeaders:
+      - name: Custom-Header
+        value: Awesome
+    initialDelaySeconds: 5
+    periodSeconds: 5
